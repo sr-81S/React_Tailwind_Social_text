@@ -6,8 +6,15 @@ const NotFoundPage = () => {
 
   const navigate = useNavigate();
 
+  const data = sessionStorage.getItem("token");
+
+
   const goTo = ()=>{
-    navigate('/')
+    if(!data){ 
+      navigate('/')
+    }else{
+      navigate('/profile')
+    }
   }
 
 
