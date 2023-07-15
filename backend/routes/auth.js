@@ -16,8 +16,12 @@ router.get('/', async(req,res)=>{
 // routes and logic for the registration link: http:localhost:4000/api/register
 
 router.post('/api/register', async (req, res)=>{
-    const {name,email,password,cpassword} = req.body;
-    if(!name || !email || !password || !cpassword){
+    const {name,email,password,cpassword,picture} = req.body;
+
+    // console.log(picture);
+
+
+    if(!name || !email || !password || !cpassword || !picture){
         console.log("fields missing");
         return res.status(422).json({error: "field missing"});
     }
@@ -35,7 +39,7 @@ router.post('/api/register', async (req, res)=>{
 
 
     try {
-        const newUser = new User({name,email,password});
+        const newUser = new User({name,email,password,picture});
 
         await newUser.save();
 
@@ -139,5 +143,17 @@ router.get('/api/allpost',authlog,async(req,res)=>{
 
 })
 
+
+//get posts user details
+
+router.get('/api/getuser/:postUserId', authlog, async(req, res)=>{
+    try {
+        const {postUserId} = req.params;
+        const user = await User.findById({_id:postUserId});
+        res.status(200).json(user);
+    } catch (error) {
+        res.status(400).json({msg: error})
+    }
+})
 
 module.exports = router

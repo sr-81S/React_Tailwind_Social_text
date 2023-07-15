@@ -17,6 +17,7 @@ const Profile = () => {
 
     const [userId, setUserId] = useState('')
     const [userName, setUserName] = useState('')
+    const [profiePic, setProfiePic] = useState('')
 
 
     const navigate = useNavigate()
@@ -70,7 +71,8 @@ const Profile = () => {
                 const responceData = await responce.json();
                 
                 console.log(responceData);
-                const {_id, name} = responceData;
+                const {_id, name, picture} = responceData;
+                setProfiePic(picture)
                 setUserId(_id)
                 setUserName(name)
                 
@@ -101,10 +103,10 @@ const Profile = () => {
   return (
     <div className='w-full px-[6%] py-[2rem] flex gap-[0.5rem] justify-between relative'>
         <div className=' fixed w-[21%] '>
-            <UserWidget username={userName} />
+            <UserWidget username={userName} profile={profiePic} />
         </div>
         <div className='basis-[42%] ml-[28%] '>
-            <MyPostWidget userId={userId} name={userName} />
+            <MyPostWidget userId={userId} name={userName} profile={profiePic} />
             {/* <PostsWidgets/> */}
         </div>
         <div className='basis-[26%]'>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify';
+import Resizer from "react-image-file-resizer";
 
 const RegisterForm = () => {
 
@@ -11,8 +12,10 @@ const RegisterForm = () => {
         cpassword: "",
     })
 
+    const [profile, setProfile] = useState()
 
     const handelChange = (e)=>{
+        
         const {name, value} = e.target;
         setInputValue((preValue)=>{
             return {
@@ -20,6 +23,43 @@ const RegisterForm = () => {
                 [name]: value,
             }
         })
+    }
+
+    //image resizer
+    const resizeFile = (file) =>
+        new Promise((resolve) => {
+             Resizer.imageFileResizer(
+                file,
+                300,
+                300,
+                "JPEG",
+                100,
+                0,
+            (uri) => {
+                resolve(uri);
+            },
+            "base64"
+        );
+    });
+
+
+    const handelProfile = async(e)=>{
+        // const file = e.target.files[0];
+        // if(file){
+        //     const reader = new FileReader();
+        //     reader.readAsDataURL(file)
+        //     reader.onloadend = ()=>{
+        //         setProfile(reader.result)
+        //     }
+        // }
+        try {
+            const file = e.target.files[0];
+            const image = await resizeFile(file);
+            console.log(image);
+            setProfile(image)
+          } catch (err) {
+            console.log(err);
+          }
     }
 
 
@@ -72,7 +112,7 @@ const RegisterForm = () => {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({name, email, password, cpassword}),
+            body: JSON.stringify({name, email, password, cpassword, picture: profile}),
         })
 
         const resData = await responce.json();
@@ -112,8 +152,11 @@ const RegisterForm = () => {
     <div className='bg-gray-50 flex justify-center items-center min-h-screen' >
         <div className="bg-gray-100 flex p-3 shadow-xl max-w-3xl border rounded-2xl items-center">
             {/* image */}
-            <div className='w-1/2' >
-                <img className='rounded-2xl' src="https://images.pexels.com/photos/2528118/pexels-photo-2528118.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" />
+            <div className='w-1/2 relative' >
+                <img className='rounded-2xl opacity-70' src="https://images.pexels.com/photos/2528118/pexels-photo-2528118.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" />
+                {profile?(<div className=' h-[200px] w-[200px] rounded-[50%] overflow-hidden inline-block shadow-xl absolute top-[20%] left-[23%] ' >
+                    <img className='h-[200px] w-[200px] object-cover' src={profile} alt="profile" srcset="" />
+                </div>):(<></>)}
             </div>
             {/* form  */}
             <div className='w-1/2 px-10' >
@@ -124,6 +167,8 @@ const RegisterForm = () => {
                     <input className='p-2 rounded-lg border' type="text" name="name" value={inputValue.name} onChange={handelChange} placeholder='Enter Your Names' />
                     <label className="ml-2 text-zinc-500" htmlFor="email">Email</label>
                     <input className='p-2 rounded-lg border' type="email" name="email" value={inputValue.email} onChange={handelChange} placeholder='Enter Your Email' />
+                    <label className="ml-1 text-zinc-500" htmlFor="profile">Choose profile picture</label>
+                    <input className='ml-1' type="file" name="prfile" accept="image/jpg, image/jpeg" onChange={handelProfile} />
                     <label className="ml-2 text-zinc-500" htmlFor="password">Password</label>
                     <input className='p-2 rounded-lg border' type="password" name="password" value={inputValue.password} onChange={handelChange} placeholder='Enter Your Password' />
                     <label className="ml-2 text-zinc-500" htmlFor="cpassword">Confirm Password</label>

@@ -1,10 +1,9 @@
 import React from 'react'
-import profileImage from '../assets/profile.jpg'
 import twitter from "../assets/twitter.png"
 import linkedin from "../assets/linkedin.png"
 import { useNavigate } from 'react-router-dom'
 
-const UserWidget = ({username}) => {
+const UserWidget = ({username, profile}) => {
 
   const navigate = useNavigate()
 
@@ -19,7 +18,7 @@ const UserWidget = ({username}) => {
       <div className='flex items-center justify-between gap-[1rem] pb-[1.1rem] ' >
         <div className='flex items-center justify-between gap-[1rem] cursor-pointer' >
           <div className=' h-[60px] w-[60px] ' >
-            <img className=' h-[60px] w-[60px] rounded-[50%] object-cover '  src={profileImage} alt="profileImageIcon" />
+            <img className=' h-[60px] w-[60px] rounded-[50%] object-cover '  src={profile} alt="profileImageIcon" />
           </div>
           <div>
             <h4 className=' font-medium text-lg text-[#074FB2] hover:text-teal-600  ' > {username} </h4>

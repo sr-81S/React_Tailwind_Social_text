@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import profileImage from '../assets/profile.jpg'
 import PostsWidgets from './PostsWidgets';
 import { toast } from 'react-toastify';
 
@@ -7,7 +6,7 @@ import { toast } from 'react-toastify';
 
 
 
-const MyPostWidget = ({userId, name}) => {
+const MyPostWidget = ({userId, name, profile}) => {
 
   const [description, setDescription] = useState()
   const [allPosts, setallPosts] = useState()
@@ -43,7 +42,7 @@ const MyPostWidget = ({userId, name}) => {
 
     setallPosts(afterReverse)
 
-    toast.success('🦄 Wow so easy!', {
+    toast.success('New Post Posted', {
       position: "bottom-left",
       autoClose: 5000,
       hideProgressBar: false,
@@ -82,9 +81,9 @@ const MyPostWidget = ({userId, name}) => {
       <div className='p-6 bg-blue-50 rounded-xl drop-shadow-md ' >
       <div className="flex items-center justify-between gap-4 mb-3" >
         <div className='w-[60px] h-[60px]  '>
-          <img className=' w-[60px] rounded-[50%] object-cover ' src={profileImage} alt="ProfileImage" />
+          <img className='w-[60px] h-[60px] rounded-[50%] object-cover ' src={profile} alt="ProfileImage" />
         </div>
-        <div className=' p-[1rem] w-[100%] border-solid border-[1px] border-[#074FB2] rounded-3xl ' >
+        <div className=' p-[1rem] w-[90%] border-solid border-[1px] border-[#074FB2] rounded-3xl ' >
           <input value={description} onChange={(e)=>setDescription(e.target.value)} className='w-[100%] bg-inherit focus:outline-none ' type="text" name="description" placeholder="What's on your mind... "  id="description" />
         </div>
       </div>
@@ -117,9 +116,10 @@ const MyPostWidget = ({userId, name}) => {
           return(
             <>
               <PostsWidgets
-                key={index}
+                key={value._id}
                 userName ={value.name}
                 postDescription ={value.description}
+                postUserId={value.userId}
               />
             </>
           )
