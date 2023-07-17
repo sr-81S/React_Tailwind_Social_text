@@ -55,7 +55,7 @@ const RegisterForm = () => {
         try {
             const file = e.target.files[0];
             const image = await resizeFile(file);
-            console.log(image);
+            // console.log(image);
             setProfile(image)
           } catch (err) {
             console.log(err);

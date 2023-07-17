@@ -7,6 +7,7 @@ import AdvertWidget from '../widgets/AdvertWidget';
 
 // import PostsWidgets from '../widgets/PostsWidgets';
 import MyPostWidget from '../widgets/MyPostWidget';
+import MenuWidget from '../widgets/MenuWidget';
 
 
 
@@ -110,6 +111,7 @@ const Profile = () => {
             {/* <PostsWidgets/> */}
         </div>
         <div className='basis-[26%]'>
+            <MenuWidget/>
             <AdvertWidget/>
         </div>
     </div>

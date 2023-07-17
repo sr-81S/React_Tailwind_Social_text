@@ -1,7 +1,7 @@
 import React from 'react'
-import profilePicture from '../assets/Profile.svg'
 
-const PostWidget = ({name,description,postUserPic}) => {
+
+const PostWidget = ({name,description,postUserPic,pictures}) => {
   return (
     <div className='p-6 bg-blue-50 rounded-xl my-4 drop-shadow-md ' >
         <div className='flex items-center justify-between' >
@@ -19,6 +19,11 @@ const PostWidget = ({name,description,postUserPic}) => {
         <div className=' my-3 ' >
           <p className='text-[#074FB2] font-medium ml-4' > {description} </p>
         </div>
+        {
+          pictures?(<div className='flex justify-center items-center overflow-hidden rounded-2xl mb-3' >
+          <img src={pictures} alt="PostPictureFromDB"  />
+        </div>):(<></>)
+        }
         <hr />
         <div className='flex items-center justify-between mt-3' >
           <div className='flex items-center justify-between gap-4' >

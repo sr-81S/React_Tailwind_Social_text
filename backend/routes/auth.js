@@ -103,19 +103,27 @@ router.get("/api/profile", authlog, async (req, res)=>{
 
 //user post a post on site
 router.post("/api/post",authlog, async(req,res)=>{
+
+    const {name, userId, description, postPicture} = req.body;
+
+    // console.log(postPicture);
+
     try {
-        const {name, userId, description} = req.body;
+        
 
         const user = await User.findById(userId)
         
         const newPost = new Post({
             userId,
             name,
-            description
+            description,
+            postPicture
         })
 
         await newPost.save();
         const allPost = await Post.find();
+
+        console.log(allPost);
 
         res.status(200).json(allPost);
 
@@ -151,6 +159,15 @@ router.get('/api/getuser/:postUserId', authlog, async(req, res)=>{
         const {postUserId} = req.params;
         const user = await User.findById({_id:postUserId});
         res.status(200).json(user);
+    } catch (error) {
+        res.status(400).json({msg: error})
+    }
+})
+router.get('/api/getpost/:postID', authlog, async(req, res)=>{
+    try {
+        const {postID} = req.params;
+        const singlePost = await Post.findById({_id:postID});
+        res.status(200).json(singlePost);
     } catch (error) {
         res.status(400).json({msg: error})
     }

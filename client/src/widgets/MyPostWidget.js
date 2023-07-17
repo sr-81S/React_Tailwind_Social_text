@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import PostsWidgets from './PostsWidgets';
 import { toast } from 'react-toastify';
-
+import Resizer from 'react-image-file-resizer'
 
 
 
@@ -10,6 +10,8 @@ const MyPostWidget = ({userId, name, profile}) => {
 
   const [description, setDescription] = useState()
   const [allPosts, setallPosts] = useState()
+  const [imgToggle, setImgToggle] = useState(false)
+  const [postPicture, setPostPicture] = useState('')
 
   useEffect(() => {
     
@@ -19,6 +21,47 @@ const MyPostWidget = ({userId, name, profile}) => {
   
 
   const data = sessionStorage.getItem("token");
+
+  const handelPostPic = async(e)=>{
+    try {
+      const file = e.target.files[0];
+      const image = await resizeFile(file);
+      console.log(image);
+      setPostPicture(image)
+    } catch (err) {
+      console.log(err);
+    }
+
+    //full size image upload
+    // const file = e.target.files[0];
+    //     if(file){
+    //         const reader = new FileReader();
+    //         reader.readAsDataURL(file)
+    //         reader.onloadend = ()=>{
+    //             console.log(reader.result);
+    //             setPostPicture(reader.result)
+    //         }
+    //     }
+  }
+
+
+
+  //post image resizer
+  const resizeFile = (file) =>
+  new Promise((resolve) => {
+       Resizer.imageFileResizer(
+          file,
+          800,
+          1280,
+          "JPEG",
+          500,
+          0,
+      (uri) => {
+          resolve(uri);
+      },
+      "base64"
+  );
+});
 
   const createPost = async()=>{
     
@@ -30,12 +73,14 @@ const MyPostWidget = ({userId, name, profile}) => {
         "Content-Type": "application/json",
         "Authorization": `${data}`,
     },
-    body: JSON.stringify({name:name, userId: userId, description:description})
+    body: JSON.stringify({name:name, userId: userId, description:description, postPicture: postPicture})
     })
 
     const posts = await responce.json();
 
     setDescription('')
+    setPostPicture('')
+    setImgToggle(false)
 
     const afterReverse = posts.reverse();
 
@@ -72,7 +117,27 @@ const MyPostWidget = ({userId, name, profile}) => {
 
       const assendPost = getPosts.reverse();
 
+
+
+      console.log(assendPost);
+
       setallPosts(assendPost);
+     
+
+    }
+
+
+
+
+
+  //handel handelTogleImage for image post in feeds
+
+  const handelTogleImage =()=>{
+    if(imgToggle === false){
+      setImgToggle(true)
+    }else{
+      setImgToggle(false)
+    }
   }
 
 
@@ -89,7 +154,7 @@ const MyPostWidget = ({userId, name, profile}) => {
       </div>
       <hr />
       <div className=' flex items-center justify-between mt-2 ' >
-        <div className="flex items-center justify-between gap-1 text-[#074FB2] cursor-pointer hover:text-emerald-500 transition-all" >
+        <div className="flex items-center justify-between gap-1 text-[#074FB2] cursor-pointer hover:text-emerald-500 transition-all" onClick={handelTogleImage} >
           <i className="fa-solid fa-image"></i>
           <p>Image</p>
         </div>
@@ -109,6 +174,10 @@ const MyPostWidget = ({userId, name, profile}) => {
           Post
         </button>
       </div>
+      {imgToggle?(<div className='mt-4 flex items-center gap-3' >
+        <label className="ml-1 text-zinc-500" htmlFor="profile">Choose a Picture</label>
+        <input className='ml-1' type="file" name="prfile" onChange={handelPostPic} accept="image/jpg, image/jpeg" />
+      </div>):(<></>)}
     </div>
     <div>
       {
@@ -117,6 +186,7 @@ const MyPostWidget = ({userId, name, profile}) => {
             <>
               <PostsWidgets
                 key={value._id}
+                postID = {value._id}
                 userName ={value.name}
                 postDescription ={value.description}
                 postUserId={value.userId}
